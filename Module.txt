@@ -1,0 +1,13 @@
+﻿Name: Moov2 Import Export
+Category: Content
+AntiForgery: enabled
+Author: Moov2
+Website: https://github.com/moov2/Moov2.Orchard.ImportExport
+Version: 0.1
+OrchardVersion: 1.9.2
+Description: Enhances functionality of Orchard.ImportExport
+Features:
+    Moov2.Orchard.ImportExport:
+        Name: Moov2 Import Export
+        Description: Enhances functionality of Orchard.ImportExport
+        Dependencies: Orchard.ImportExport
