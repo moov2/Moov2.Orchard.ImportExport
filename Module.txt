@@ -1,4 +1,5 @@
 ﻿Name: Moov2 Import Export
+Path: ImportExports
 Category: Content
 AntiForgery: enabled
 Author: Moov2
