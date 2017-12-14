@@ -1,7 +1,7 @@
 ﻿@using Orchard.Core.Contents.ViewModels;
 @{
     var typeDisplayName = Model.TypeDisplayName;
-    var pageTitle = T("Manage Content");
+    var pageTitle = T("Export Content");
 
     IEnumerable<string> cultures = Model.Options.Cultures;
 
@@ -10,8 +10,9 @@
 
 
 @using (Html.BeginFormAntiForgeryPost())
-{<div class="manage">
-        @Html.ActionLink(T("Export").Text, "ExportContent", new { Area = "Moov2.Orchard.ImportExport", Id = (string)Model.Options.SelectedFilter }, new { @class = "button primaryAction" })
+{
+    <div class="manage">
+        <button type="submit" name="submit.BulkEdit" value="yes">@T("Export")</button>
     </div>
 
     <fieldset class="bulk-actions">

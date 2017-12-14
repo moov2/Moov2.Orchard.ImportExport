@@ -11,4 +11,4 @@ Features:
     Moov2.Orchard.ImportExport:
         Name: Moov2 Import Export
         Description: Enhances functionality of Orchard.ImportExport
-        Dependencies: Orchard.ImportExport
+        Dependencies: Orchard.ImportExport, UrlAlternates

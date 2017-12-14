@@ -3,8 +3,6 @@ using Orchard.ContentManagement;
 using Orchard.ContentManagement.MetaData;
 using Orchard.ContentManagement.MetaData.Models;
 using Orchard.Core.Common.Models;
-using Orchard.Core.Contents;
-using Orchard.Core.Contents.Settings;
 using Orchard.Core.Contents.ViewModels;
 using Orchard.DisplayManagement;
 using Orchard.ImportExport.Services;
@@ -127,15 +125,12 @@ namespace Moov2.Orchard.ImportExport.Controllers
 
         private IEnumerable<ContentTypeDefinition> GetListableTypes(bool andContainable)
         {
-            return _contentDefinitionManager.ListTypeDefinitions().Where(ctd =>
-                Services.Authorizer.Authorize(Permissions.EditContent, _contentManager.New(ctd.Name)) &&
-                ctd.Settings.GetModel<ContentTypeSettings>().Listable &&
-                (!andContainable || ctd.Parts.Any(p => p.PartDefinition.Name == "ContainablePart")));
+            return _contentDefinitionManager.ListTypeDefinitions();
         }
 
-        [HttpPost, ActionName("List")]
+        [HttpPost, ActionName("ExportContent")]
         [FormValueRequired("submit.Filter")]
-        public ActionResult ListFilterPOST(ContentOptions options)
+        public ActionResult ExportContentFilterPOST(ContentOptions options)
         {
             var routeValues = ControllerContext.RouteData.Values;
             if (options != null)
@@ -153,7 +148,7 @@ namespace Moov2.Orchard.ImportExport.Controllers
                 }
             }
 
-            return RedirectToAction("List", routeValues);
+            return RedirectToAction("ExportContent", routeValues);
         }
     }
 }

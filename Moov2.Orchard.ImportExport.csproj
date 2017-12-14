@@ -95,9 +95,14 @@
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="ViewModels\ExportContentViewModel.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Content Include="Views\Media.SummaryAdmin-url-admin-importexports-exportcontent.cshtml" />
+  </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Admin\ExportContent.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Content.SummaryAdmin-url-admin-importexports-exportcontent.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
