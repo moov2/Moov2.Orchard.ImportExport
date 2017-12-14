@@ -1,9 +1,10 @@
 ﻿using Orchard.ContentManagement;
 using System.Collections.Generic;
 
-namespace Orchard.ImportExport.ViewModels
+namespace Moov2.Orchard.ImportExport.ViewModels
 {
-    public class ExportContentViewModel {
+    public class ExportContentViewModel
+    {
         public IList<ContentItem> ContentItems { get; set; }
         public IList<CustomStepEntry> CustomSteps { get; set; }
         public virtual bool Metadata { get; set; }
@@ -12,12 +13,14 @@ namespace Orchard.ImportExport.ViewModels
         public virtual bool SiteSettings { get; set; }
     }
 
-    public class ContentTypeEntry {
+    public class ContentTypeEntry
+    {
         public string ContentTypeName { get; set; }
         public bool IsChecked { get; set; }
     }
 
-    public class CustomStepEntry {
+    public class CustomStepEntry
+    {
         public string CustomStep { get; set; }
         public bool IsChecked { get; set; }
     }
