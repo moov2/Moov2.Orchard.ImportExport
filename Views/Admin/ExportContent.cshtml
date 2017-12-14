@@ -6,13 +6,15 @@
     IEnumerable<string> cultures = Model.Options.Cultures;
 
     Layout.Title = pageTitle;
+
+    Script.Require("ImportExport.ExportContentAdmin");
 }
 
 
 @using (Html.BeginFormAntiForgeryPost())
 {
     <div class="manage">
-        <button type="submit" name="submit.BulkEdit" value="yes">@T("Export")</button>
+        <a href="#" class="js-contentexport-select-all">@T("Select all")</a>@T(" | ")<a href="#" class="js-contentexport-select-none">@T("Clear selection")</a>@T(" | ")<button type="submit" name="submit.BulkEdit" value="yes">@T("Export")</button>
     </div>
 
     <fieldset class="bulk-actions">
