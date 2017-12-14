@@ -85,10 +85,19 @@
       <Project>{fe5c5947-d2d5-42c5-992a-13d672946135}</Project>
       <Name>Orchard.ImportExport</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Orchard.Layouts\Orchard.Layouts.csproj">
+      <Project>{6BD8B2FA-F2E3-4AC8-A4C3-2925A653889A}</Project>
+      <Name>Orchard.Layouts</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AdminMenu.cs" />
     <Compile Include="Controllers\AdminController.cs" />
+    <Compile Include="ViewModels\ExportContentViewModel.cs" />
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <Content Include="Views\Admin\ExportContent.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
