@@ -7,7 +7,7 @@
     var content = (IContent)Model.ContentItem;
 }
 
-@if (Authorizer.Authorize(Permissions.Export, content))
+@if (content.Id > 0 && Authorizer.Authorize(Permissions.Export, content))
 {
     <fieldset class="export-button">
         @Html.ActionLink(T("Export").Text, "ExportSingle", new { area = "Moov2.Orchard.ImportExport", itemId = content.Id }, new { @class = "button primaryAction" })
