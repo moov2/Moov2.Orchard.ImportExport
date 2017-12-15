@@ -1,4 +1,5 @@
-﻿using Orchard;
+﻿using Moov2.Orchard.ImportExport.ViewModels;
+using Orchard;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.MetaData;
 using Orchard.ContentManagement.MetaData.Models;
@@ -55,7 +56,7 @@ namespace Moov2.Orchard.ImportExport.Controllers
         dynamic Shape { get; set; }
         public IOrchardServices Services { get; private set; }
 
-        public ActionResult ExportContent(ListContentsViewModel model, PagerParameters pagerParameters)
+        public ActionResult ExportContent(ListExportContentsViewModel model, PagerParameters pagerParameters)
         {
             Pager pager = new Pager(_siteService.GetSiteSettings(), pagerParameters);
 
@@ -88,26 +89,32 @@ namespace Moov2.Orchard.ImportExport.Controllers
                                             ? contentTypeDefinition.DisplayName
                                             : contentTypeDefinition.Name;
                 query = query.ForType(model.TypeName);
+                model.HasCommonPartOrdering = contentTypeDefinition.Parts.Any(x => "CommonPart".Equals(x.PartDefinition.Name));
             }
-
-            switch (model.Options.OrderBy)
+            else
             {
-                case ContentsOrder.Modified:
-                    //query = query.OrderByDescending<ContentPartRecord, int>(ci => ci.ContentItemRecord.Versions.Single(civr => civr.Latest).Id);
-                    query = query.OrderByDescending<CommonPartRecord>(cr => cr.ModifiedUtc);
-                    break;
-                case ContentsOrder.Published:
-                    query = query.OrderByDescending<CommonPartRecord>(cr => cr.PublishedUtc);
-                    break;
-                case ContentsOrder.Created:
-                    //query = query.OrderByDescending<ContentPartRecord, int>(ci => ci.Id);
-                    query = query.OrderByDescending<CommonPartRecord>(cr => cr.CreatedUtc);
-                    break;
+                model.HasCommonPartOrdering = false;
             }
 
             if (!String.IsNullOrWhiteSpace(model.Options.SelectedCulture))
             {
                 query = _cultureFilter.FilterCulture(query, model.Options.SelectedCulture);
+            }
+
+            if (model.HasCommonPartOrdering)
+            {
+                switch (model.Options.OrderBy)
+                {
+                    case ContentsOrder.Modified:
+                        query = query.OrderByDescending<CommonPartRecord>(cr => cr.ModifiedUtc);
+                        break;
+                    case ContentsOrder.Published:
+                        query = query.OrderByDescending<CommonPartRecord>(cr => cr.PublishedUtc);
+                        break;
+                    case ContentsOrder.Created:
+                        query = query.OrderByDescending<CommonPartRecord>(cr => cr.CreatedUtc);
+                        break;
+                }
             }
 
             model.Options.SelectedFilter = model.TypeName;
@@ -130,14 +137,27 @@ namespace Moov2.Orchard.ImportExport.Controllers
                 .ContentItems(list)
                 .Pager(pagerShape)
                 .Options(model.Options)
-                .TypeDisplayName(model.TypeDisplayName ?? "");
+                .TypeDisplayName(model.TypeDisplayName ?? "")
+                .HasCommonPartOrdering(model.HasCommonPartOrdering);
 
             return View(viewModel);
         }
 
         private IEnumerable<ContentTypeDefinition> GetListableTypes(bool andContainable)
         {
-            return _contentDefinitionManager.ListTypeDefinitions();
+            var types = _contentDefinitionManager.ListTypeDefinitions().Where(x =>
+            {
+                string stereotype;
+                if (x.Settings.TryGetValue("Stereotype", out stereotype))
+                {
+                    return !"widget".Equals(stereotype, StringComparison.InvariantCultureIgnoreCase);
+                }
+                else
+                {
+                    return true;
+                }
+            });
+            return types;
         }
 
         [HttpPost, ActionName("ExportContent")]
