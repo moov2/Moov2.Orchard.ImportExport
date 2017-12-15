@@ -21,6 +21,7 @@
         <label for="filterResults" class="bulk-filter">@T("Show")</label>
         <select id="filterResults" name="Options.SelectedFilter">
             @Html.SelectOption((string)Model.Options.SelectedFilter, "", T("any (show all)").ToString())
+            @Html.SelectOption((string)Model.Options.SelectedFilter, "--content--", T("content (allows date sorting)").ToString())
             @foreach (var filterOption in Model.Options.FilterOptions)
             {
                 @Html.SelectOption((string)Model.Options.SelectedFilter, (string)filterOption.Key, (string)filterOption.Value)

@@ -78,8 +78,12 @@ namespace Moov2.Orchard.ImportExport.Controllers
             }
 
             var query = _contentManager.Query(versionOptions, GetListableTypes(false).Select(ctd => ctd.Name).ToArray());
-
-            if (!string.IsNullOrEmpty(model.TypeName))
+            if ("--content--".Equals(model.TypeName, StringComparison.InvariantCultureIgnoreCase))
+            {
+                model.HasCommonPartOrdering = true;
+                model.TypeDisplayName = "--content--";
+            }
+            else if (!string.IsNullOrEmpty(model.TypeName))
             {
                 var contentTypeDefinition = _contentDefinitionManager.GetTypeDefinition(model.TypeName);
                 if (contentTypeDefinition == null)
@@ -170,7 +174,7 @@ namespace Moov2.Orchard.ImportExport.Controllers
                 routeValues["Options.SelectedCulture"] = options.SelectedCulture; //todo: don't hard-code the key
                 routeValues["Options.OrderBy"] = options.OrderBy; //todo: don't hard-code the key
                 routeValues["Options.ContentsStatus"] = options.ContentsStatus; //todo: don't hard-code the key
-                if (GetListableTypes(false).Any(ctd => string.Equals(ctd.Name, options.SelectedFilter, StringComparison.OrdinalIgnoreCase)))
+                if ("--content--".Equals(options.SelectedFilter, StringComparison.OrdinalIgnoreCase) || GetListableTypes(false).Any(ctd => string.Equals(ctd.Name, options.SelectedFilter, StringComparison.OrdinalIgnoreCase)))
                 {
                     routeValues["id"] = options.SelectedFilter;
                 }
