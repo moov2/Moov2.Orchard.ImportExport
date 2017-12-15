@@ -178,11 +178,27 @@ namespace Moov2.Orchard.ImportExport.Controllers
                         return new HttpUnauthorizedResult();
                     }
                 }
-                var exportPath = _importExportService.Export(checkedContentItems.Select(x => x.ContentType).Distinct(), checkedContentItems, new ExportOptions { ExportData = true, ExportMetadata = true });
+                var exportPath = _importExportService.Export(checkedContentItems.Select(x => x.ContentType).Distinct(), checkedContentItems, GetDefaultExportOptions());
                 return File(exportPath, "text/xml", "export.xml");
             }
 
             return this.RedirectLocal(returnUrl, () => RedirectToAction("ExportContent"));
+        }
+
+        public ActionResult ExportSingle(int itemId)
+        {
+            var content = _contentManager.Get(itemId);
+            if (content != null)
+            {
+                var exportPath = _importExportService.Export(new List<string> { content.ContentType }, new List<ContentItem> { content }, GetDefaultExportOptions());
+                return File(exportPath, "text/xml", "export.xml");
+            }
+            return HttpNotFound();
+        }
+
+        private ExportOptions GetDefaultExportOptions()
+        {
+            return new ExportOptions { ExportData = true, ExportMetadata = true };
         }
     }
 }

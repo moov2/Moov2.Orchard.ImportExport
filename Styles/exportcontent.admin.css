@@ -1,0 +1,19 @@
+﻿
+fieldset.export-button {
+    clear: none;
+    float: left;
+}
+
+fieldset.export-button {
+    margin: 0 12px 0 0;
+    padding: 0 12px;
+}
+
+/** RTL */
+.dir-rtl fieldset.export-button {
+    float: right;
+}
+
+.dir-rtl fieldset.export-button {
+    margin: 0 0 0 12px;
+}

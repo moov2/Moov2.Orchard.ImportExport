@@ -69,6 +69,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Scripts\exportcontent.admin.js" />
+    <Content Include="Styles\exportcontent.admin.css" />
     <Content Include="Web.config" />
     <Content Include="Properties\AssemblyInfo.cs" />
     <Content Include="Module.txt" />
@@ -94,6 +95,7 @@
   <ItemGroup>
     <Compile Include="AdminMenu.cs" />
     <Compile Include="Controllers\AdminController.cs" />
+    <Compile Include="Drivers\ContentsDriver.cs" />
     <Compile Include="ResourceManifest.cs" />
     <Compile Include="ViewModels\ExportContentViewModel.cs" />
   </ItemGroup>
@@ -108,6 +110,11 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Scripts\Web.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Placement.info" />
+    <Content Include="Styles\Web.config" />
+    <None Include="Views\Content.ExportButton.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

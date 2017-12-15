@@ -1,0 +1,6 @@
+﻿<Placement>
+    <!-- available display shapes -->
+
+    <!-- edit "shape" -->
+    <Place Content_ExportButton="Sidebar:30"/>
+</Placement>
