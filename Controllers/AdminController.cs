@@ -1,15 +1,13 @@
-﻿using Moov2.Orchard.ImportExport.ViewModels;
+﻿using Moov2.Orchard.ImportExport.Services;
+using Moov2.Orchard.ImportExport.ViewModels;
 using Orchard;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.MetaData;
 using Orchard.ContentManagement.MetaData.Models;
 using Orchard.Core.Common.Models;
 using Orchard.Core.Contents.ViewModels;
-using Orchard.Data;
 using Orchard.DisplayManagement;
 using Orchard.ImportExport;
-using Orchard.ImportExport.Models;
-using Orchard.ImportExport.Services;
 using Orchard.Localization;
 using Orchard.Localization.Services;
 using Orchard.Mvc;
@@ -31,21 +29,17 @@ namespace Moov2.Orchard.ImportExport.Controllers
         private readonly IContentManager _contentManager;
         private readonly ICultureFilter _cultureFilter;
         private readonly ICultureManager _cultureManager;
-        private readonly ICustomExportStep _customExportStep;
-        private readonly IImportExportService _importExportService;
+        private readonly IExportSpecificService _exportSpecificService;
         private readonly ISiteService _siteService;
-        private readonly ITransactionManager _transactionManager;
 
-        public AdminController(ICustomExportStep customExportStep, IContentDefinitionManager contentDefinitionManager, IContentManager contentManager, IImportExportService importExportService, ISiteService siteService, ICultureFilter cultureFilter, ICultureManager cultureManager, IShapeFactory shapeFactory, IOrchardServices orchardServices, ITransactionManager transactionManager)
+        public AdminController(IContentDefinitionManager contentDefinitionManager, IContentManager contentManager, IExportSpecificService exportSpecificService, ISiteService siteService, ICultureFilter cultureFilter, ICultureManager cultureManager, IShapeFactory shapeFactory, IOrchardServices orchardServices)
         {
             _contentDefinitionManager = contentDefinitionManager;
             _contentManager = contentManager;
             _cultureFilter = cultureFilter;
             _cultureManager = cultureManager;
-            _customExportStep = customExportStep;
-            _importExportService = importExportService;
+            _exportSpecificService = exportSpecificService;
             _siteService = siteService;
-            _transactionManager = transactionManager;
 
             Shape = shapeFactory;
             Services = orchardServices;
@@ -151,8 +145,7 @@ namespace Moov2.Orchard.ImportExport.Controllers
         {
             var types = _contentDefinitionManager.ListTypeDefinitions().Where(x =>
             {
-                string stereotype;
-                if (x.Settings.TryGetValue("Stereotype", out stereotype))
+                if (x.Settings.TryGetValue("Stereotype", out string stereotype))
                 {
                     return !"widget".Equals(stereotype, StringComparison.InvariantCultureIgnoreCase);
                 }
@@ -194,15 +187,15 @@ namespace Moov2.Orchard.ImportExport.Controllers
             if (itemIds != null)
             {
                 var checkedContentItems = _contentManager.GetMany<ContentItem>(itemIds, VersionOptions.Latest, QueryHints.Empty);
-                foreach (var item in checkedContentItems)
+                foreach (var content in checkedContentItems)
                 {
-                    if (!Services.Authorizer.Authorize(Permissions.Export, item, T("Couldn't export selected content.")))
+                    if (!Services.Authorizer.Authorize(Permissions.Export, content, T("Couldn't export selected content.")))
                     {
-                        _transactionManager.Cancel();
                         return new HttpUnauthorizedResult();
                     }
                 }
-                var exportPath = _importExportService.Export(checkedContentItems.Select(x => x.ContentType).Distinct(), checkedContentItems, GetDefaultExportOptions());
+
+                var exportPath = _exportSpecificService.Export(itemIds.ToList()); ;
                 return File(exportPath, "text/xml", "export.xml");
             }
 
@@ -214,15 +207,14 @@ namespace Moov2.Orchard.ImportExport.Controllers
             var content = _contentManager.Get(itemId);
             if (content != null)
             {
-                var exportPath = _importExportService.Export(new List<string> { content.ContentType }, new List<ContentItem> { content }, GetDefaultExportOptions());
+                if (!Services.Authorizer.Authorize(Permissions.Export, content, T("Couldn't export selected content.")))
+                {
+                    return new HttpUnauthorizedResult();
+                }
+                var exportPath = _exportSpecificService.Export(itemId);
                 return File(exportPath, "text/xml", "export.xml");
             }
             return HttpNotFound();
-        }
-
-        private ExportOptions GetDefaultExportOptions()
-        {
-            return new ExportOptions { ExportData = true, ExportMetadata = true };
         }
     }
 }
