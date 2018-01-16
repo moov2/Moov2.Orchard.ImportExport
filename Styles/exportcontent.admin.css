@@ -4,9 +4,10 @@ fieldset.export-button {
     float: left;
 }
 
-fieldset.export-button {
-    margin: 0 12px 0 0;
+.publish-later-datetime ~ fieldset.export-button {
+    margin: 0 0 0 12px;
     padding: 0 12px;
+    border-left: 1px solid #ccc;
 }
 
 /** RTL */
