@@ -91,7 +91,7 @@ namespace Moov2.Orchard.ImportExport.Recipes.Providers.Builders
             var dataContentIds = DataContentIds;
             var exportVersionOptions = GetContentExportVersionOptions(VersionHistoryOptions);
             var contentItems = dataContentIds.Any()
-                ? _orchardServices.ContentManager.GetManyByVersionId(dataContentIds, QueryHints.Empty)
+                ? _orchardServices.ContentManager.GetMany<ContentItem>(dataContentIds, exportVersionOptions, QueryHints.Empty)
                 : Enumerable.Empty<ContentItem>();
 
             var schemaContentTypes = contentItems.Select(x => x.ContentType).Distinct();
