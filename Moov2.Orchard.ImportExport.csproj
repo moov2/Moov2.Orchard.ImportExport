@@ -144,7 +144,7 @@
     <Content Include="Placement.info" />
     <Content Include="Styles\Web.config" />
     <Content Include="packages.config" />
-    <None Include="Views\Content.ExportButton.cshtml" />
+    <Content Include="Views\Content.ExportButton.cshtml" />
     <Content Include="Views\Content.SummaryAdmin.cshtml" />
   </ItemGroup>
   <PropertyGroup>
